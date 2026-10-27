@@ -35,7 +35,7 @@ A **Java 21**-based Console (CLI) application to simulate monthly vehicle loan i
 
 Ensure the `credit_simulator` script has executable permissions:
 ```bash
-chmod +x credit_simulator bin/credit_simulator
+chmod +x bin/credit_simulator
 ```
 *(Note: If the JAR file has not been built yet, the `credit_simulator` script will automatically run `mvn clean package` first).*
 
