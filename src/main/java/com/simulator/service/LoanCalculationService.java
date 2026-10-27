@@ -21,7 +21,7 @@ public class LoanCalculationService {
         BigDecimal currentRatePercent = request.vehicle().getBaseInterestRate();
         int tenorYears = request.tenorYears();
 
-        for (int year = 0; year <= tenorYears; year++) {
+        for (int year = 1; year <= tenorYears; year++) {
             if (year > 1) {
                 if (year % 2 == 0) {
                     currentRatePercent = currentRatePercent.add(ONE_YEAR_INCREMENT);
