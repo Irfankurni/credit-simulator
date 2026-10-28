@@ -35,12 +35,16 @@ A **Java 21**-based Console (CLI) application to simulate monthly vehicle loan i
 
 Ensure the `credit_simulator` script has executable permissions:
 ```bash
-chmod +x bin/credit_simulator
+chmod +x bin/credit_simulator credit_simulator
 ```
 *(Note: If the JAR file has not been built yet, the `credit_simulator` script will automatically run `mvn clean package` first).*
 
 ### 1. Interactive CLI Mode
 Run the following command:
+```bash
+bin/credit_simulator
+```
+or
 ```bash
 bin/credit_simulator
 ```
@@ -51,6 +55,10 @@ Select a menu option:
 
 ### 2. Batch File Input Mode (`file_inputs.txt`)
 Run the command by passing the text file path:
+```bash
+credit_simulator file_inputs.txt
+```
+or
 ```bash
 bin/credit_simulator file_inputs.txt
 ```

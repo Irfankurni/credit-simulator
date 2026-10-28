@@ -1,15 +1,15 @@
-name: Java CI & CLI Smoke Test
+name: Java CI & Push to Docker Hub
 
 on:
   push:
-    branches: [ "main", "master", "develop" ]
+    branches: [ "master", "develop" ]
   pull_request:
-    branches: [ "main", "master", "develop" ]
+    branches: [ "master", "develop" ]
   workflow_dispatch:
 
 jobs:
-  build-and-test:
-    name: Build, Unit Test & Smoke Test (Java 21)
+  build-and-push-dockerhub:
+    name: Build, Test & Push to Docker Hub
     runs-on: ubuntu-latest
 
     steps:
@@ -29,29 +29,18 @@ jobs:
       - name: 4. Package Application JAR
         run: mvn -B package -DskipTests
 
-      - name: 5. Normalize Line Endings & Permissions
-        run: |
-          sed -i 's/\r$//' credit_simulator bin/credit_simulator file_inputs.txt || true
-          chmod +x credit_simulator bin/credit_simulator
-
-      - name: 6. CLI Smoke Test - Batch File Mode
-        continue-on-error: true
-        run: |
-          set +e
-          ./credit_simulator file_inputs.txt
-          bin/credit_simulator file_inputs.txt
-          exit 0
-
-      - name: 7. CLI Smoke Test - Interactive Menu Exit
-        continue-on-error: true
-        run: |
-          set +e
-          echo "3" | ./credit_simulator
-          exit 0
-
-      - name: 8. Upload Executable JAR Artifact
-        uses: actions/upload-artifact@v4
+      - name: 5. Login to Docker Hub
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
         with:
-          name: credit-simulator-jar
-          path: target/credit-simulator.jar
-          retention-days: 14
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: 6. Build and Push Docker Image to Docker Hub
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/credit-simulator:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/credit-simulator:${{ github.sha }}
