@@ -29,21 +29,21 @@ jobs:
       - name: 4. Package Application JAR
         run: mvn -B package -DskipTests
 
-      - name: 5. Ensure Executable Permissions on CLI Scripts
-        run: chmod +x credit_simulator bin/credit_simulator
+      - name: 5. Normalize Line Endings (CRLF to LF) & Set Permissions
+        run: |
+          sed -i 's/\r$//' credit_simulator bin/credit_simulator file_inputs.txt
+          chmod +x credit_simulator bin/credit_simulator
 
       - name: 6. CLI Smoke Test - Batch File Mode
         run: |
-          echo "Testing ./credit_simulator file_inputs.txt..."
-          OUTPUT=$(./credit_simulator file_inputs.txt)
-          echo "$OUTPUT"
-          
-          # Memastikan output mengandung hasil perhitungan sesuai Rumus.xlsx
-          echo "$OUTPUT" | grep -q "tahun 1 : Rp. 2,250,000.00/bln , Suku Bunga : 8%"
-          echo "$OUTPUT" | grep -q "tahun 2 : Rp. 2,432,250.00/bln , Suku Bunga : 8,1%"
-          echo "$OUTPUT" | grep -q "tahun 3 : Rp. 2,641,423.50/bln , Suku Bunga : 8,6%"
+          echo "=== Testing ./credit_simulator file_inputs.txt ==="
+          ./credit_simulator file_inputs.txt | tee output.txt
 
-          echo "Testing bin/credit_simulator file_inputs.txt..."
+          grep -Fq "tahun 1 : Rp. 2,250,000.00/bln , Suku Bunga : 8%" output.txt
+          grep -Fq "tahun 2 : Rp. 2,432,250.00/bln , Suku Bunga : 8,1%" output.txt
+          grep -Fq "tahun 3 : Rp. 2,641,423.50/bln , Suku Bunga : 8,6%" output.txt
+
+          echo "=== Testing bin/credit_simulator file_inputs.txt ==="
           bin/credit_simulator file_inputs.txt
 
       - name: 7. CLI Smoke Test - Interactive Menu Exit
