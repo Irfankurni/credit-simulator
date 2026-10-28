@@ -9,6 +9,7 @@ A **Java 21**-based Console (CLI) application to simulate monthly vehicle loan i
 - **Java JDK 21** (or at least JDK 17+)
 - **Apache Maven 3.8+**
 - **Bash Shell** (Linux / macOS / Git Bash / WSL on Windows)
+- *(Optional)* **Docker** (if running via Docker container)
 
 ---
 
@@ -42,7 +43,7 @@ chmod +x bin/credit_simulator credit_simulator
 ### 1. Interactive CLI Mode
 Run the following command:
 ```bash
-bin/credit_simulator
+./credit_simulator
 ```
 or
 ```bash
@@ -56,7 +57,7 @@ Select a menu option:
 ### 2. Batch File Input Mode (`file_inputs.txt`)
 Run the command by passing the text file path:
 ```bash
-credit_simulator file_inputs.txt
+./credit_simulator file_inputs.txt
 ```
 or
 ```bash
@@ -79,3 +80,27 @@ tahun 1 : Rp. 2,250,000.00/bln , Suku Bunga : 8%
 tahun 2 : Rp. 2,432,250.00/bln , Suku Bunga : 8,1%
 tahun 3 : Rp. 2,641,423.50/bln , Suku Bunga : 8,6%
 ```
+
+---
+
+## Running with Docker Image
+
+You can also run the application using Docker without needing Java or Maven installed on your host machine.
+
+### 1. Interactive CLI Mode
+```bash
+docker run --rm -it irfankurni/credit-simulator:latest
+```
+*(Or replace `irfankurni` with `<username_dockerhub>` if using your own Docker Hub repository).*
+
+### 2. Batch File Input Mode
+Run using the bundled `file_inputs.txt`:
+```bash
+docker run --rm irfankurni/credit-simulator:latest file_inputs.txt
+```
+
+*(Optional) To use a custom input file from your host machine:*
+```bash
+docker run --rm -v $(pwd)/file_inputs.txt:/app/file_inputs.txt irfankurni/credit-simulator:latest file_inputs.txt
+```
+
