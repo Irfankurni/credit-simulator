@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [[ "$(basename "$SCRIPT_DIR")" == "bin" ]]; then
+    PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+else
+    PROJECT_ROOT="$SCRIPT_DIR"
+fi
+
+JAR_FILE="$PROJECT_ROOT/target/credit-simulator.jar"
+
+if [ ! -f "$JAR_FILE" ]; then
+    echo "Building application with Maven..."
+    mvn -f "$PROJECT_ROOT/pom.xml" clean package -DskipTests -q
+fi
+
+java -jar "$JAR_FILE" "$@"
